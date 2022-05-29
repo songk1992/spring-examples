@@ -1,7 +1,6 @@
 package com.example.makecustomorm.controllers;
 
 import com.example.makecustomorm.entities.Book;
-import com.example.makecustomorm.orm.CustomOrm;
 import com.example.makecustomorm.repositories.BookRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +17,13 @@ public class BookController {
     }
 
     @GetMapping(value = "")
-    public List<Book> findBooks(){
+    public List<Book> findBooks() {
         return bookRepository.read();
 
     }
 
     @PostMapping(value = "")
-    public boolean createBooks(@RequestBody Book book){
+    public boolean createBooks(@RequestBody Book book) {
         return bookRepository.create(book);
     }
 

@@ -18,7 +18,7 @@ public class CustomOrm<T> {
 
     public static <T> CustomOrm<T> connect() {
         createBookTable();
-        return new CustomOrm<T>();
+        return new CustomOrm<>();
     }
 
     // todo annotation 기반으로 바꿔보기
@@ -97,13 +97,12 @@ public class CustomOrm<T> {
                                         field.set(t, rs.getString(field.getName()));
                                     }
                                 }
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
+                            } catch (IllegalAccessException | SQLException e) {
                                 e.printStackTrace();
                             }
                         }
                 );
+
                 retList.add(t);
             }
 
@@ -132,11 +131,12 @@ public class CustomOrm<T> {
     public boolean create(T t) {
         Connection connection = null;
         Statement statement = null;
+        boolean isSuccessful = true;
+
         try {
             // 입력받은 제너릭 클래스 생성
-            Class<? extends Object> clss = t.getClass();
+            Class<?> clss = t.getClass();
             Field[] declaredFields = clss.getDeclaredFields();
-            Field pk = null;
 
             StringBuffer sb = new StringBuffer();
             sb.append("INSERT INTO ").append(clss.getSimpleName()).append(" (");
@@ -195,22 +195,20 @@ public class CustomOrm<T> {
         } catch (Exception e) {
             // error handling
             e.printStackTrace();
-            return false;
+            isSuccessful = false;
         } finally {
             // 자원 반환
             try {
                 if (statement != null) statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
             try {
                 if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                return false;
             }
         }
-        return true;
+        return isSuccessful;
     }
 }
